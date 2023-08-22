@@ -160,7 +160,8 @@ def users_show(user_id):
         .limit(100)
         .all()
     )
-    return render_template("users/show.html", user=user, messages=messages)
+    likes = [message.id for message in user.likes]
+    return render_template("users/show.html", user=user, messages=messages, likes=likes)
 
 
 @app.route("/users/<int:user_id>/following")
@@ -237,7 +238,8 @@ def add_like(message_id):
 
     liked_message = Message.query.get_or_404(message_id)
     if liked_message.user_id == g.user.id:
-        return abort(403)
+        flash("You cannot like your own message.", "danger")
+        return redirect("/")
 
     user_likes = g.user.likes
 
@@ -248,6 +250,8 @@ def add_like(message_id):
 
     db.session.commit()
 
+    print("Liked messages:", g.user.likes)  # Debugging line
+    flash("Message liked!", "success")  # Debugging line
     return redirect("/")
 
 
