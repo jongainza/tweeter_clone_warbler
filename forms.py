@@ -36,4 +36,5 @@ class ProfileForm(FlaskForm):
     image_url = StringField("(Optional) Image URL")
     header_image_url = StringField("Header Image URL")
     bio = TextAreaField("Bio")
+    location = StringField("Location")
     password = PasswordField("Password", validators=[Length(min=6)])
